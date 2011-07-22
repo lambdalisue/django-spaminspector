@@ -2,11 +2,8 @@
 # vim: set fileencoding=utf8 :
 """Django Inspector middleware
 
-Methods:
-    foobar - the explanation of the method.
-
-Data:
-    hogehoge - the explanation of the data.
+Middlewares:
+    SpamInspectionMiddleware - Spam inspection middleware
 
 
 Copyright:
@@ -48,15 +45,15 @@ class SpamInspectionMiddleware(object):
         }
         self.akismet = Akismet(**kwargs)
         if not self.akismet.verify_key():
-            warnings.warn("Your SPAMINSPECTOR_AKISMET_KEY is invalid. Spam inspection feture is turned off.")
+            warnings.warn("Invalid Akismet API key. Spam inspection feture is turned off.")
             raise MiddlewareNotUsed
         # Create inspection_views dict
-        self.inspection_views = {}
+        self.inspection_profiles = {}
         for view_func, profile in settings.SPAMINSPECTOR_VIEWS:
             if isinstance(view_func, basestring):
-                # Load view_func from string
+                # Get callable view_func from path
                 view_func = get_callable(view_func)
-            self.inspection_views[view_func] = profile
+            self.inspection_profiles[view_func] = profile
     
     def _is_spam(self, request, profile):
         def _get(request, profile, key):
@@ -81,11 +78,11 @@ class SpamInspectionMiddleware(object):
     def process_view(self, request, view_func, view_args, view_kwargs):
         if view_func in self.inspection_views.keys():
             # Check spamness of request
-            inspection_profile = self.inspection_views[view_func]
+            inspection_profile = self.inspection_profiles[view_func]
             if self._is_spam(request, inspection_profile):
                 # Detected as spam
                 if settings.SPAMINSPECTOR_SPAM_TEMPLATE:
                     return TemplateResponse(request, settings.SPAMINSPECTOR_SPAM_TEMPLATE, status=403)
                 else:
-                    return HttpResponseForbidden("You comment was detected as SPAM")
+                    return HttpResponseForbidden("Your comment was detected as a SPAM")
         return view_func(request, *view_args, **view_kwargs)
