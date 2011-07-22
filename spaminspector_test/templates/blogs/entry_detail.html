@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% load comments %}
+
+{% block content %}
+<article id="blog-entry" class="entry">
+<h1 id="blog-title" class="title">{{ object.title }}</h1>
+<section id="blog-body" class="body">
+	{{ object.body }}
+</section>
+<aside id="blog-comments" class="comments">
+	{% get_comment_count for object as comment_count %}
+	<h2>Comments ({{ comment_count }})</h2>
+	{% render_comment_form for object %}
+	<hr>
+	{% render_comment_list for object %}
+</aside>
+</article>
+{% endblock %}

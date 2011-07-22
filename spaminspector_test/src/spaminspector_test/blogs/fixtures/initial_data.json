@@ -1,0 +1,17 @@
+[{
+"model": "blogs.entry",
+"pk": "1",
+"fields": {
+    "created_at": "2011-07-01",
+    "updated_at": "2011-07-02",
+    "title": "This is a my first blog post",
+    "body": "Yes this is a my first blog post."
+}}, {
+"model": "blogs.entry",
+"pk": "2",
+"fields": {
+    "created_at": "2011-07-01",
+    "updated_at": "2011-07-02",
+    "title": "This is a my second blog post",
+    "body": "Yes this is a my second blog post."
+}}]

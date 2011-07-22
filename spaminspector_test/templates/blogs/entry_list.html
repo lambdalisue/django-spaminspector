@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% load comments %}
+
+{% block content %}
+<h1>Simple blog entries</h1>
+
+<section id="blog-entries">
+	{% for object in object_list %}
+	<article class="entry">
+		<h2 class="title"><a href="{{ object.get_absolute_url }}">{{ object.title }}</a></h2>
+		<section class="body">
+			{{ object.body }}
+		</section>
+		<aside class="comments">
+			{% get_comment_count for object as comment_count %}
+			{{ comment_count }} comments on this post.
+		</aside>
+	</article>
+	{% endfor %}
+</section>
+{% endblock %}
